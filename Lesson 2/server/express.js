@@ -4,7 +4,20 @@ import cookieParser from 'cookie-parser'
 import compress from 'compression'
 import cors from 'cors'
 import helmet from 'helmet'
+import Template from './..template'
 
+app.get('/', (req,res) => {
+    req.statusCode(200).send(Template())
+})
+
+app.use((err, req, res, next) => {
+    if (err.name === 'UnauthorizedError') {
+      res.status(401).json({"error" : err.name + ": " + err.message})
+    }else if (err) {
+      res.status(400).json({"error" : err.name + ": " + err.message})
+      console.log(err)
+    }
+  })
 const app = express()
 
 app.use(bodyParser.json())
